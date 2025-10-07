@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Debug Test</title>
+</head>
+<body>
+    <h1>Booking API Test</h1>
+    <button onclick="testBooking()">Test Booking Submission</button>
+    <div id="result"></div>
+
+    <script>
+        async function testBooking() {
+            const bookingData = {
+                canopyType: "Pyramid Canopy",
+                canvasType: "Standard Canvas",
+                accessories: ["String Lighting"],
+                eventType: "wedding",
+                location: "123 Test Street, Test City",
+                eventDate: "2024-12-25",
+                startTime: "10:00",
+                duration: "8",
+                guestCount: 50,
+                specialRequests: "Test booking",
+                totalPrice: 100000, // $1000 in cents
+                userEmail: "test@example.com"
+            };
+
+            try {
+                console.log('Testing booking submission...');
+                const response = await fetch('http://localhost:8080/api/bookings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bookingData),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    document.getElementById('result').innerHTML = 
+                        '<h3>✅ Success!</h3><pre>' + JSON.stringify(result, null, 2) + '</pre>';
+                    console.log('Booking created:', result.booking);
+                } else {
+                    const error = await response.json();
+                    document.getElementById('result').innerHTML = 
+                        '<h3>❌ Error!</h3><pre>' + JSON.stringify(error, null, 2) + '</pre>';
+                    console.error('Booking error:', error);
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<h3>❌ Network Error!</h3><pre>' + error.message + '</pre>';
+                console.error('Network error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
+

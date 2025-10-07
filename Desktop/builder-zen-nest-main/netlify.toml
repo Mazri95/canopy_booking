@@ -1,0 +1,22 @@
+[build]
+  command = "npm run build:client"
+  functions = "netlify/functions"
+  publish = "dist/spa"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[functions]
+  external_node_modules = ["@supabase/supabase-js"]
+  node_bundler = "esbuild"
+  
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/:splat"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
